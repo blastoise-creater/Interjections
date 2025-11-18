@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interjections Masterclass — The Pulse of Emotion</title>
+
+<!-- Google Fonts: Playfair Display (Serif for titles) and Lato (Sans-serif for body) -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+  /* --- LUXURY PALETTE --- */
+  :root{
+    --bg-deep: #081A2D; /* Deep Sapphire Blue */
+    --bg-panel: rgba(2, 10, 20, 0.85); /* Semi-transparent darker panel */
+    --accent-gold-light: #f0e0c0; /* Creamy Gold Highlight */
+    --accent-gold-dark: #c0a068;  /* Rich Copper/Gold */
+    --text-primary: #F0F8FF; /* Crisp Off-White */
+    --text-secondary: #99AABB; /* Muted Slate/Taupe */
+    --shadow-color: rgba(255, 255, 255, 0.05);
+  }
+  html,body{height:100%;margin:0;font-family:'Lato',sans-serif;overflow:hidden;}
+  body{
+    background-color: var(--bg-deep);
+    background-image: radial-gradient(circle at top right, rgba(20, 40, 60, 0.5) 0%, transparent 50%),
+                      radial-gradient(circle at bottom left, rgba(20, 40, 60, 0.5) 0%, transparent 50%);
+    color:var(--text-primary);
+    display:flex;align-items:center;justify-content:center;padding:10px;
+  }
+  
+  /* Gold Gradient Mixin */
+  .gold-text {
+    background: linear-gradient(90deg, var(--accent-gold-light), var(--accent-gold-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* --- CORE DECK CONTAINER (The Presentation Screen Viewport) --- */
+  .deck{
+    /* 1. Dynamic Scaling and Aspect Ratio */
+    aspect-ratio: 14 / 8; 
+    width: min(
+        calc(100vw - 40px), 
+        calc((100vh - 40px) * 14 / 8), 
+        1400px /* The absolute maximum nominal width */
+    );
+    height: auto; 
+    max-height: 800px; 
+    
+    /* 2. Style for the container */
+    border-radius: 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--accent-gold-dark);
+    box-shadow: 0 10px 40px var(--shadow-color), inset 0 0 50px rgba(184, 134, 11, 0.05);
+    overflow:hidden; /* CRITICAL: Clips the unscaled footprint of the inner content */
+    position:relative;
+    padding: 0; 
+    box-sizing:border-box;
+  }
+  
+  /* --- SCALING ROOT (The actual design canvas at 1400x800) --- */
+  #scaling-root {
+    /* Define the nominal design size, which the content expects */
+    width: 1400px;
+    height: 800px;
+    transform-origin: top left; /* Ensures scaling starts from the correct corner */
+    
+    /* Layout for all content inside the root */
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  /* --- HEADER & PROGRESS --- */
+  .header{
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+  }
+  .brand-small{
+    font-weight:700;letter-spacing:1px;font-size:16px;
+    display: flex; /* Ensure content is aligned */
+    gap: 15px;
+    align-items: center;
+  }
+  /* NEW STYLE FOR CREDIT */
+  .maker-credit {
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      background: rgba(192, 160, 104, 0.15); /* Slightly darker gold tint */
+      color: var(--accent-gold-light);
+      font-weight: 400;
+  }
+  
+  .progress{display:flex;gap:8px;align-items:center;}
+  .dot{width:16px;height:4px;border-radius:2px;background:var(--text-secondary);transition:all 0.5s;}
+  .dot.active{
+    background: linear-gradient(90deg, var(--accent-gold-light), var(--accent-gold-dark));
+    box-shadow:0 0 10px var(--accent-gold-light);
+    width: 30px;
+  }
+
+  /* --- SLIDE AREA & EFFECTS --- */
+  .slide-area{flex:1;position:relative;}
+  
+  .slide{
+    width:100%;height:100%;padding:10px 0;box-sizing:border-box;
+    display:none;flex-direction:row;gap:50px;
+    animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+  .slide.active{display:flex;}
+  @keyframes slideIn {
+    from{opacity:0;transform:translateY(30px)}
+    to{opacity:1;transform:none}
+  }
+  
+  /* --- SLIDE 1: GRAND TITLE SCREEN --- */
+  .slide[data-slide="1"] {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .slide[data-slide="1"] .title {
+    font-size: 100px;
+    letter-spacing: -2px;
+    line-height: 1.0;
+  }
+
+  /* --- CONTENT BLOCKS (FIXED ALIGNMENT) --- */
+  .left{
+    width:60%;height:100%;display:flex;flex-direction:column;
+    justify-content:flex-start; /* Aligns text content to the top */
+    gap:20px;
+    padding-top: 15px; /* Adds consistent top spacing for text */
+  }
+  .right{
+    width:40%;height:100%;display:flex;flex-direction:column;align-items:center;
+    justify-content:center; /* Vertically centers the content (card/image) in the right column */
+    padding-top: 0; 
+  }
+  
+  .title{
+    font-size:52px;font-weight:900;line-height:1.2;
+    font-family:'Playfair Display',serif;
+    color: var(--text-primary);
+  }
+  .tagline{
+    font-size:20px;color:var(--accent-gold-light);font-weight:700;letter-spacing:1px;
+    font-family:'Playfair Display',serif;
+  }
+  .badge{
+    display:inline-block;padding:10px 20px;border-radius:50px;
+    background: rgba(192, 160, 104, 0.1);
+    border:1px solid var(--accent-gold-dark);
+    color:var(--accent-gold-light);font-weight:700;font-size:14px;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+  }
+  .subtitle{
+    color:var(--text-secondary);font-size:18px;margin-top:10px;font-weight:400;
+  }
+  .desc{
+    color:var(--text-primary); 
+    line-height:1.7;
+    font-size:19px; /* Global standard size for description text */
+    margin-top:10px;
+    max-width:95%;
+  }
+  
+  /* --- VISUAL PANEL (RIGHT) - The luxury frame --- */
+  .card{
+    width:100%;
+    height:85%; /* Default height for all cards */
+    border-radius:8px;
+    background: rgba(255, 255, 255, 0.03); /* Translucent White */
+    padding:18px;box-sizing:border-box;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px); /* Soft glass effect */
+  }
+
+  /* CRITICAL: Styles for specific slides/cards */
+  .slide[data-slide="7"] .card {
+      /* Placeholder for video aspect ratio */
+      height: 70%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+  }
+  .slide[data-slide="7"] .video-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(192, 160, 104, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+  }
+
+  .emoji-display {
+    font-size: 150px;
+    line-height: 1;
+  }
+
+  /* List style for Slide 3's left content */
+  .slide .left ul {
+    margin-top:20px;
+    color:var(--text-primary);
+    line-height:1.7;
+    font-size:17px;
+    list-style-type: '— ';
+    padding-left: 15px;
+  }
+  
+  .img-fit{
+    width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;
+    filter: sepia(0.05) brightness(1.05); /* Subtle tone enhancement */
+  }
+
+  /* --- FEATURE GRID --- */
+  .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:25px;}
+  .feature{
+    padding:18px;border-radius:6px;
+    background: rgba(192, 160, 104, 0.05); /* Very light gold tint */
+    border-left: 3px solid var(--accent-gold-dark);
+  }
+  .feature strong{
+    font-size:16px;font-weight:700;display:block;margin-bottom:4px;
+    color: var(--accent-gold-light);
+    letter-spacing: 0.5px;
+  }
+  .small{font-size:13px;color:var(--text-secondary)}
+  
+  /* --- CONTROLS --- */
+  .controls{
+    display:flex;align-items:center;justify-content:space-between;margin-top:25px;gap:16px;
+    padding-top: 15px; /* Added separation from slides */
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+  }
+  .left-controls{display:flex;gap:10px;align-items:center;}
+  .btn{
+    background:rgba(255, 255, 255, 0.05);
+    border:1px solid rgba(255, 215, 0, 0.1);
+    color:var(--text-primary);padding:14px 25px;border-radius:8px;font-weight:700;cursor:pointer;
+    display:inline-flex;gap:10px;align-items:center;font-size:15px;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  }
+  .btn:hover:not(:disabled){
+    transform:translateY(-1px);
+    background: rgba(192, 160, 104, 0.2);
+    box-shadow:0 5px 20px rgba(184, 134, 11, 0.2);
+  }
+  .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+  }
+  .btn.primary{
+    background: linear-gradient(90deg,var(--accent-gold-light),var(--accent-gold-dark));
+    color:var(--bg-deep);border:none;
+    box-shadow:0 5px 30px rgba(184, 134, 11, 0.5);
+  }
+  .kbd{
+    font-size:14px;color:var(--accent-gold-light);
+    background:rgba(192, 160, 104, 0.1);
+    padding:8px 10px;border-radius:5px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck" role="application" aria-label="Interjections Presentation">
+  
+  <div id="scaling-root">
+    
+    <div class="header">
+      <div class="brand-small gold-text">
+        <span>LANGUAGE PULSE // GRAMMAR MASTERCLASS</span>
+        <!-- ADDED CREATOR CREDIT IN HEADER -->
+        <span class="maker-credit">Made by: Anshul & Tanishq Sagar</span>
+      </div>
+      <div class="progress" aria-hidden="true" id="dots"></div>
+    </div>
+
+    <div class="slide-area" id="slideArea">
+      <!-- Slide 1: Grand Title -->
+      <section class="slide active" data-slide="1">
+        <div class="left">
+          <div class="tagline">Understanding the Immediate Emotional Connector</div>
+          <div class="title gold-text">Interjections</div>
+          <div class="subtitle">The powerful, grammatically independent words that fuel spontaneous speech.</div>
+          <div class="desc" style="max-width: 80%; margin: 20px auto 0; line-height: 1.5; font-size: 30px;">
+            A deep dive into the 11 essential types of interjections and how to use them to add color, rhythm, and raw emotion to your writing and speaking.
+          </div>
+        </div>
+        <div class="right"></div>
+      </section>
+
+      <!-- Slide 2: Definition and Independence -->
+      <section class="slide" data-slide="2">
+        <div class="left">
+          <div class="badge">FUNDAMENTAL DEFINITION</div>
+          <div class="title" style="font-size:48px">The Outsider Words</div>
+          <div class="desc">An **interjection** is a short utterance that expresses emotion, feeling, or sentiment, but has **no grammatical link** to the rest of the sentence.</div>
+          <div class="feature-grid">
+            <div class="feature">
+              <strong>SPONTANEITY</strong>
+              <div class="small">Used in sudden, unplanned speech or text.</div>
+            </div>
+            <div class="feature">
+              <strong>INDEPENDENCE</strong>
+              <div class="small">Removing an interjection doesn't affect the sentence structure.</div>
+            </div>
+            <div class="feature">
+              <strong>PUNCTUATION</strong>
+              <div class="small">Usually followed by a comma or an exclamation mark.</div>
+            </div>
+            <div class="feature">
+              <strong>VOCABULARY</strong>
+              <div class="small">Often simple, single-syllable words like 'Oh', 'Ah', 'Hey'.</div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display">🛑</p>
+            <p class="tagline" style="margin-top: 20px;">Grammatically, they are STOP signs.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Primary Type 1: Joy/Approval -->
+      <section class="slide" data-slide="3">
+        <div class="left">
+          <div class="badge">TYPE 1: PRIMARY EMOTIONS</div>
+          <div class="title" style="font-size:48px">Triumph and Joy 🎉</div>
+          <div class="desc">These interjections are the most direct way to express immediate positive feelings, approval, or relief.</div>
+          <ul>
+            <li>**Hooray!** The most formal expression of success or delight.</li>
+            <li>**Bravo!** Used to show deep admiration or approval (borrowed from Italian).</li>
+            <li>**Yay!** A common, informal expression of excitement.</li>
+            <li>**Ah!** Can express realization, relief, or pleasure.</li>
+          </ul>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display">🏆</p>
+            <p class="tagline" style="margin-top: 20px;">"Hooray!" We secured the contract.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Primary Type 2: Pain/Disgust -->
+      <section class="slide" data-slide="4">
+        <div class="left">
+          <div class="badge">TYPE 2: PRIMARY EMOTIONS</div>
+          <div class="title" style="font-size:48px">Discomfort and Distress 😩</div>
+          <div class="desc">These capture instant, negative physical or mental reactions—often used when something surprising or painful occurs.</div>
+          <div class="feature-grid">
+            <div class="feature">
+              <strong>OUCH!</strong>
+              <div class="small">A sharp, sudden reaction to physical pain.</div>
+            </div>
+            <div class="feature">
+              <strong>UGH!</strong>
+              <div class="small">Expresses disgust, annoyance, or weariness.</div>
+            </div>
+            <div class="feature">
+              <strong>YUCK!</strong>
+              <div class="small">A clear expression of distaste or revulsion.</div>
+            </div>
+            <div class="feature">
+              <strong>ALAS!</strong>
+              <div class="small">Formal or dated expression of grief or pity.</div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display" style="color: #ff4500;">💥</p>
+            <p class="tagline" style="margin-top: 20px; color: #ff6347;">"Ouch!" That coffee was scalding.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Secondary Interjections -->
+      <section class="slide" data-slide="5">
+        <div class="left">
+          <div class="badge">TYPE 3: SECONDARY CONVERSIONAL</div>
+          <div class="title" style="font-size:48px">Words That "Stepped Down"</div>
+          <div class="desc">These are words that are historically nouns, adjectives, or verbs, but are used in a sentence solely to express emotion or command.</div>
+          <ul>
+            <li>**Wow!** (Originally a sound word, now expresses awe/surprise.)</li>
+            <li>**Nonsense!** (Originally a noun, now expresses disagreement.)</li>
+            <li>**Indeed!** (Originally an adverb, now expresses strong agreement.)</li>
+            <li>**Shoot!** (Originally a verb, now expresses frustration.)</li>
+          </ul>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display">😮</p>
+            <p class="tagline" style="margin-top: 20px;">"Wow!" Your presentation is incredible.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Volitional/Attention-Seeking -->
+      <section class="slide" data-slide="6">
+        <div class="left">
+          <div class="badge">TYPE 4: VOLITIONAL INTERJECTIONS</div>
+          <div class="title" style="font-size:48px">Calling for Attention</div>
+          <div class="desc">These are interjections used to get someone's attention, signal the start of a conversation, or politely interrupt.</div>
+          <div class="feature-grid">
+            <div class="feature" style="border-left: 3px solid #6495ED;">
+              <strong>HEY!</strong>
+              <div class="small">Commonly used to greet or demand attention.</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #6495ED;">
+              <strong>PSST!</strong>
+              <div class="small">A whisper used to call someone privately.</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #FFD700;">
+              <strong>HEAR, HEAR!</strong>
+              <div class="small">Expressing agreement during a speech or debate.</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #FFD700;">
+              <strong>AHEM!</strong>
+              <div class="small">Used to draw attention, often before speaking.</div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display">👂</p>
+            <p class="tagline" style="margin-top: 20px;">"Ahem," may I have the floor?</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Video Placeholder and Example -->
+      <section class="slide" data-slide="7">
+        <div class="left">
+          <div class="badge">DEMONSTRATION AND PRACTICE</div>
+          <div class="title" style="font-size:48px">Seeing the Words in Action</div>
+          <div class="desc">Interjections are best learned through context. This video placeholder illustrates how intonation and body language amplify their power in communication.</div>
+          <ul>
+            <li>**INTENSITY:** How loud you say "Oh!" changes its meaning (surprise vs. realization).</li>
+            <li>**CONTEXT:** Using "Well," to introduce a hesitant answer.</li>
+            <li>**FLOW:** How interjections are often followed by a brief pause or break in speech.</li>
+          </ul>
+        </div>
+        <div class="right">
+          <!-- Video Placeholder container -->
+          <div class="card">
+            <div class="video-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" class="gold-text" width="100" height="100" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 3L18 12L6 21V3Z"/>
+              </svg>
+              <p class="tagline" style="margin-top: 15px; font-size: 24px;">Video Demonstration</p>
+              <p class="small" style="margin-top: 5px;">Replace with your YouTube/Vimeo embed here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: The Punctuation Rule -->
+      <section class="slide" data-slide="8">
+        <div class="left">
+          <div class="badge">GRAMMAR MASTERY</div>
+          <div class="title" style="font-size:48px">Exclamation or Comma?</div>
+          <div class="desc">The punctuation you choose signals the **strength** and **placement** of the emotional outburst to the reader.</div>
+          <div class="feature-grid" style="grid-template-columns: repeat(1, 1fr);">
+            <div class="feature" style="border-left: 3px solid #ff4500;">
+              <strong>STRONG EMOTION (!)</strong>
+              <div class="small">Use **exclamation points** when the interjection stands alone or expresses shock/joy: **"Whoa!** That car is fast."</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #c0a068;">
+              <strong>MILD EMOTION (,)</strong>
+              <div class="small">Use a **comma** when the emotion is mild or introductory: **"Well,** I guess we should leave now."</div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display" style="font-size: 100px;">!,?</p>
+            <p class="tagline" style="margin-top: 20px;">Punctuation is the volume knob.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Interjections as Dialogue Tags -->
+      <section class="slide" data-slide="9">
+        <div class="left">
+          <div class="badge">USAGE IN NARRATIVE</div>
+          <div class="title" style="font-size:48px">Dialogue Tags and Scene Setting</div>
+          <div class="desc">In writing, interjections quickly establish the mood and feeling of a character, eliminating the need for long explanatory sentences.</div>
+          <ul>
+            <li>**Tension:** "Gah! I completely forgot my keys."</li>
+            <li>**Hesitation:** "Hmm, I'm not sure that's the right solution."</li>
+            <li>**Affirmation:** "Right, let's start with the first chapter."</li>
+          </ul>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display">💬</p>
+            <p class="tagline" style="margin-top: 20px;">They are emotional shorthand.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Prohibition/Disagreement -->
+      <section class="slide" data-slide="10">
+        <div class="left">
+          <div class="badge">TYPE 5: PROHIBITION & NEGATION</div>
+          <div class="title" style="font-size:48px">Stopping the Action ✋</div>
+          <div class="desc">These interjections are used to command someone to stop, silence someone, or express direct and firm negation.</div>
+          <div class="feature-grid">
+            <div class="feature" style="border-left: 3px solid #dc143c;">
+              <strong>STOP!</strong>
+              <div class="small">The most direct command to halt an action.</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #dc143c;">
+              <strong>SHH!</strong>
+              <div class="small">A request or command for silence.</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #dc143c;">
+              <strong>NOPE!</strong>
+              <div class="small">Informal, strong negative answer.</div>
+            </div>
+            <div class="feature" style="border-left: 3px solid #dc143c;">
+              <strong>BAH!</strong>
+              <div class="small">Expressing scorn or utter contempt.</div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 50%;">
+            <p class="emoji-display">🚫</p>
+            <p class="tagline" style="margin-top: 20px;">"Stop!" That's the wrong way.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Conclusion -->
+      <section class="slide" data-slide="11">
+        <div class="left" style="justify-content:center; text-align:center; gap: 30px;">
+          <div class="badge">CONCLUSION</div>
+          <div class="title gold-text" style="font-size:48px; margin-top:20px;">The Language of Reflex</div>
+          <!-- ADDED PROMINENT CREDIT -->
+          <div class="tagline" style="font-size: 28px; margin-top: -10px;">Made by: Anshul and Tanishq Sagar</div>
+          <!-- END ADDED PROMINENT CREDIT -->
+          <div class="desc" style="max-width: 80%; margin: 20px auto 0; font-size:24px;">
+            Interjections are the punctuation marks of spoken language. Master them, and you master the art of conveying genuine, immediate human emotion.
+          </div>
+          <button class="btn primary" onclick="go(0)" style="margin-top:20px; text-decoration: none; font-size: 18px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            RESTART THE MASTERCLASS
+          </button>
+        </div>
+        <div class="right">
+          <div class="card" style="height: 50%; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <p class="emoji-display">💡</p>
+          </div>
+        </div>
+      </section>
+
+
+    </div>
+
+    <div class="controls">
+      <div class="left-controls">
+        <button class="btn" id="prevBtn" title="Previous (←)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            PREVIOUS
+        </button>
+        <button class="btn primary" id="nextBtn" title="Next (→)">
+            NEXT SECTION
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="color:var(--text-secondary);font-size:15px;">SLIDE <span id="current" class="gold-text">1</span> / <span id="total">11</span></div>
+      </div>
+    </div>
+    
+  </div> <!-- END #scaling-root -->
+</div> <!-- END .deck -->
+
+<script>
+  // --- CONFIGURATION ---
+  const nominalWidth = 1400;
+  const nominalHeight = 800;
+  
+  // --- ELEMENT SELECTION ---
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let index = 0;
+  const currentEl = document.getElementById('current');
+  const totalEl = document.getElementById('total');
+  const deck = document.querySelector('.deck'); 
+  const scalingRoot = document.getElementById('scaling-root');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+
+  totalEl.textContent = total; // Set total slide count
+
+  // --- SCALING LOGIC (1400:800 Aspect Ratio) ---
+  function applyScale() {
+    const deckRect = deck.getBoundingClientRect();
+    const actualWidth = deckRect.width;
+    
+    // Calculate the required scale factor to fit the 1400px wide content into the actual width.
+    const scaleFactor = actualWidth / nominalWidth;
+    
+    // Apply the scale transformation to the root element
+    scalingRoot.style.transform = `scale(${scaleFactor})`;
+  }
+
+  // --- PRESENTATION LOGIC ---
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((s,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0? ' active':'');
+    d.dataset.i = i;
+    d.title = 'Slide ' + (i+1);
+    dotsWrap.appendChild(d);
+    d.addEventListener('click', ()=>go(i));
+  });
+
+  function updateUI(){
+    // 1. Update slide visibility
+    slides.forEach((s,i)=> s.classList.toggle('active', i===index));
+    
+    // 2. Update counter
+    currentEl.textContent = index + 1;
+    
+    // 3. Update dots
+    document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===index));
+    
+    // 4. Update button states
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === total - 1;
+  }
+
+  function go(i){
+    // Ensure index stays within bounds
+    index = Math.max(0, Math.min(total-1, i));
+    updateUI();
+  }
+  
+  // Attach event listeners for buttons
+  nextBtn.addEventListener('click', ()=> go(index+1));
+  prevBtn.addEventListener('click', ()=> go(index-1));
+
+  // --- KEYBOARD NAVIGATION ---
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight') go(index+1);
+    if(e.key === 'ArrowLeft') go(index-1);
+    if(e.key === 'Home') go(0);
+    if(e.key === 'End') go(total-1);
+  });
+
+  // --- TOUCH/SWIPE DETECTION FOR MOBILE ---
+  let touchStartX = 0;
+
+  deck.addEventListener('touchstart', (e) => {
+    // We use passive:false to allow e.preventDefault() in touchmove if needed,
+    // but we use e.preventDefault() in touchstart to prevent default scroll behavior on initial touch
+    e.preventDefault(); 
+    touchStartX = e.changedTouches[0].screenX;
+  }, {passive:false});
+
+  deck.addEventListener('touchmove', (e) => {
+    // Prevent default scroll behavior while touching the deck
+    e.preventDefault(); 
+  }, {passive:false});
+
+  deck.addEventListener('touchend', (e) => {
+    const touchEndX = e.changedTouches[0].screenX;
+    const swipeThreshold = 50; // Minimum distance for a recognized swipe
+    
+    // Only proceed if touchStartX was actually set (a valid touch started)
+    if (touchStartX !== 0) {
+        if (touchEndX < touchStartX - swipeThreshold) {
+          // Swiped Left - Go Next
+          go(index + 1);
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+          // Swiped Right - Go Previous
+          go(index - 1);
+        }
+    }
+    touchStartX = 0; // Reset
+  }, {passive:true});
+  
+  // --- INITIALIZATION ---
+  window.onload = () => {
+    updateUI();
+    applyScale();
+  };
+  
+  // Recalculate scale whenever the window size changes
+  window.addEventListener('resize', applyScale);
+</script>
+</body>
+</html>
+
